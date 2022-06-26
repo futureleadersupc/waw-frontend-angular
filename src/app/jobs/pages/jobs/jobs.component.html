@@ -7,69 +7,17 @@
       color="warn"></mat-progress-bar>
   </ng-template>
 
-  <form
-    #jobsForm="ngForm"
-    (submit)="this.handleSubmit()"
-    class="flex justify-between">
-    <ng-container *ngFor="let field of this.columns">
-      <mat-form-field *ngIf="this.useMatFormField(field)">
-        <mat-label>{{ field.label }}</mat-label>
-        <input
-          *ngIf="['text', 'number'].includes(field.type)"
-          matInput
-          [name]="field.key"
-          [type]="field.type"
-          [required]="field.required ?? false"
-          [attr.min]="field.type === 'number' ? field.min ?? null : null"
-          [attr.max]="field.type === 'number' ? field.max ?? null : null"
-          [attr.minLength]="
-            field.type === 'text' ? field.minLength ?? null : null
-          "
-          [attr.maxLength]="
-            field.type === 'text' ? field.maxLength ?? null : null
-          "
-          [(ngModel)]="this.currentItem[field.key]" />
-        <mat-select
-          *ngIf="field.type === 'dropdown'"
-          [name]="field.key"
-          [required]="field.required ?? false"
-          [(ngModel)]="this.currentItem[field.key]">
-          <mat-option
-            *ngFor="let option of field.options"
-            [value]="option.value">
-            {{ option.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-slide-toggle
-        *ngIf="field.type === 'toggle'"
-        [name]="field.key"
-        [required]="field.required ?? false"
-        [(ngModel)]="this.currentItem[field.key]"
-        aria-label="Publication status"
-        matTooltip="Publication status">
-        {{ field.label }}
-      </mat-slide-toggle>
-    </ng-container>
-
+  <form #jobsForm="ngForm" class="flex justify-between">
     <button
       mat-raised-button
-      type="submit"
       color="primary"
-      class="box-border h-12 w-28"
-      aria-label="Button that displays a tooltip when focused or hovered over update or add icon"
-      [matTooltip]="(isEditMode ? 'Update' : 'Add') + ' new job offer'">
-      {{ isEditMode ? "Update" : "Add" }}
+      class="h-12 w-28"
+      aria-label="Button that displays a tooltip when focused or hovered over add button"
+      (click)="openDialog()"
+      matTooltip="Add new job offer">
+      {{ "Add Offer" }}
     </button>
-    <button
-      mat-raised-button
-      color="warn"
-      *ngIf="this.isEditMode"
-      (click)="this.cancelEdit()"
-      aria-label="Cancel job offer edit"
-      matTooltip="Cancel job offer edit">
-      Cancel
-    </button>
+
     <mat-form-field appearance="outline" color="primary" class="order-last">
       <mat-label>Offer Filter</mat-label>
       <input

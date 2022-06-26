@@ -23,6 +23,7 @@ export interface Experience {
   description: string;
   image?: UserImage;
 }
+
 export interface Education {
   id: number;
   university: string;

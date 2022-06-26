@@ -42,6 +42,7 @@ export class ProfileComponent extends UseUser implements OnInit, OnDestroy {
     const year = parsed.getFullYear();
     return `${month} ${day}, ${year}`;
   }
+
   getDisplayableExpDates = (start: number, end: number | null) => {
     const msgs = { start: "", end: "Present" };
     const startDate = new Date(start);

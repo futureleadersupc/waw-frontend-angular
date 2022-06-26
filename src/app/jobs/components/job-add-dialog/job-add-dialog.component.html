@@ -1,0 +1,64 @@
+<h1 mat-dialog-title>Add a new offer</h1>
+<div mat-dialog-content>
+  <form #jobsForm="ngForm" (submit)="this.handleSubmit()" class="flex flex-col">
+    <ng-container *ngFor="let field of this.columns">
+      <mat-form-field *ngIf="this.useMatFormField(field)" appearance="outline">
+        <mat-label>{{ field.label }}</mat-label>
+        <input
+          *ngIf="['text', 'number'].includes(field.type)"
+          matInput
+          [name]="field.key"
+          [type]="field.type"
+          [required]="field.required ?? false"
+          [attr.min]="field.type === 'number' ? field.min ?? null : null"
+          [attr.max]="field.type === 'number' ? field.max ?? null : null"
+          [attr.minLength]="
+            field.type === 'text' ? field.minLength ?? null : null
+          "
+          [attr.maxLength]="
+            field.type === 'text' ? field.maxLength ?? null : null
+          "
+          [(ngModel)]="this.currentItem[field.key]" />
+        <mat-select
+          *ngIf="field.type === 'dropdown'"
+          [name]="field.key"
+          [required]="field.required ?? false"
+          [(ngModel)]="this.currentItem[field.key]">
+          <mat-option
+            *ngFor="let option of field.options"
+            [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-slide-toggle
+        class="grid-flow-row"
+        *ngIf="field.type === 'toggle'"
+        [name]="field.key"
+        [required]="field.required ?? false"
+        [(ngModel)]="this.currentItem[field.key]"
+        aria-label="Publication status">
+        {{ field.label }}
+      </mat-slide-toggle>
+    </ng-container>
+
+    <div mat-dialog-actions align="end">
+      <button
+        mat-raised-button
+        color="warn"
+        class="h-12 w-28"
+        (click)="onNoClick()">
+        No Thanks
+      </button>
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        class="h-12 w-28"
+        aria-label="Button that displays a tooltip when focused or hovered over update or add icon"
+        matTooltip="Add new job offer">
+        {{ "Add" }}
+      </button>
+    </div>
+  </form>
+</div>

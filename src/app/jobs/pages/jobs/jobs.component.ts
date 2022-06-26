@@ -7,6 +7,8 @@ import { ColumnDefinition } from "src/app/common/model/column-definition";
 import { JobOffer } from "../../model/job-offer";
 import { JobsService } from "../../services/jobs.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatDialog } from "@angular/material/dialog";
+import { JobAddDialogComponent } from "../../components/job-add-dialog/job-add-dialog.component";
 
 @Component({
   selector: "app-jobs",
@@ -60,7 +62,8 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private jobsService: JobsService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   get isEditMode() {
@@ -77,7 +80,12 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   startEdit(item: JobOffer) {
-    this.currentItem = { ...item };
+    this.dialog.open(JobAddDialogComponent, {
+      width: "550px",
+      height: "500px",
+      data: item,
+    });
+    // this.currentItem = { ...item };
   }
 
   cancelEdit() {
@@ -123,22 +131,6 @@ export class JobsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  handleSubmit() {
-    console.log("handling submit...");
-    if (!this.jobsForm.form.valid) return;
-    console.log("passed validation...");
-    const job = this.currentItem as JobOffer;
-    if (this.isEditMode) {
-      console.log("sending update...");
-      this.updateJob(job.id, job);
-    } else {
-      console.log("sending create...");
-      this.createJob(job);
-    }
-    this.cancelEdit();
-    console.log("finished...");
-  }
-
   getDisplayableColumn(item: JobOffer, column: ColumnDefinition<JobOffer>) {
     const value = item[column.key];
     if (column.type === "toggle") {
@@ -159,5 +151,13 @@ export class JobsComponent implements OnInit, AfterViewInit {
     if (event.target === null) return;
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(JobAddDialogComponent, {
+      width: "550px",
+      height: "500px",
+    });
+    dialogRef.afterClosed();
   }
 }
